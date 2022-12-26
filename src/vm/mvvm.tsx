@@ -28,7 +28,7 @@ export class AppViewModel {
 	protected onUnmount(): void {}
 }
 
-const vm = ({ viewModelName, Component }: IVM) => {
+export const vm = ({ viewModelName, Component }: IVM) => {
 	return (props: any) => {
 		const [init, setInit] = useState(false);
 		const ObserverComponent = useMemo(() => observer(Component), []);
@@ -38,10 +38,8 @@ const vm = ({ viewModelName, Component }: IVM) => {
 				VMInstance.init();
 				setInit(true);
 			}
-		});
-		useEffect(() => () => VMInstance.unmount(), []);
+		}, [init, VMInstance]);
+		useEffect(() => () => VMInstance.unmount(), [VMInstance]);
 		return init ? <ObserverComponent viewModel={VMInstance} {...props} /> : null;
 	};
 };
-
-export default vm;

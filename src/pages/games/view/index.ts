@@ -1,4 +1,3 @@
-import './GamesViewModel';
-import './GameDetailsViewModel';
+import './GamesVM';
 
 export * from './Games';

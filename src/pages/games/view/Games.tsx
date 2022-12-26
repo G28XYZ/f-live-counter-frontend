@@ -1,8 +1,22 @@
-import React, { FC } from 'react';
-import vm from 'vm/mvvm';
+import React, { FC, useEffect } from 'react';
+import { ViewProps, ViewType, vm } from '@vm';
+import { GamesVM } from './GamesVM';
+import { IEvent } from '../service/IGames';
 
-const games: FC<any> = ({ viewModel }) => {
-	return <>Games</>;
+export interface GamesProps extends ViewProps<GamesVM> {
+	data?: { [key: string]: IEvent };
+}
+
+const GamesComponent: FC<GamesProps> = ({ viewModel }) => {
+	useEffect(() => {}, [viewModel.appVM.count]);
+
+	return (
+		<>
+			{Object.keys(viewModel.games || {})?.map((item: string) => (
+				<div key={item}>{item}</div>
+			))}
+		</>
+	);
 };
 
-export const Games = vm({ viewModelName: 'GamesVM', Component: games });
+export const Games: ViewType<GamesProps> = vm({ viewModelName: 'GamesVM', Component: GamesComponent });
