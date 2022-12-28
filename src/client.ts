@@ -1,9 +1,21 @@
-import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, concat, gql, HttpLink, InMemoryCache } from '@apollo/client';
 
 const uri = 'https://f-live-counter.vercel.app/api';
 // const uri = "http://localhost:4000/api";
 const cache = new InMemoryCache();
 const httpLink = new HttpLink({ uri });
+
+export const EVENTS = gql`
+	{
+		data @client
+	}
+`;
+
+export const queryLoggedIn = {
+	query: EVENTS,
+	data: { data: {} },
+};
+cache.writeQuery(queryLoggedIn);
 
 const authMiddleware = new ApolloLink((operation, forward) => {
 	operation.setContext(({ headers = {} }) => ({

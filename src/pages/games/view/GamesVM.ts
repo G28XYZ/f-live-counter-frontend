@@ -1,24 +1,20 @@
-import { action, observable, reaction, runInAction } from 'mobx';
-import { Inject, Service } from 'typedi';
+import { action, observable, runInAction } from 'mobx';
+import { Service } from 'typedi';
 import { AppViewModel } from '@vm';
 import type { IEvent } from '../service/IGames';
-import { AppVM } from 'App';
+import { EVENTS } from 'client';
 
 @Service('GamesVM')
 export class GamesVM extends AppViewModel {
-	@Inject('AppVM') appVM: AppVM;
 	@observable games: { [key: string]: IEvent };
 
 	onInit() {
-		reaction(
-			() => this.appVM.count,
-			() => this.setGames()
-		);
+		this.client.watchQuery({ query: EVENTS }).subscribe(({ data }) => this.setGames(data.data));
 	}
 
-	@action setGames() {
+	@action setGames(data: { [key: string]: IEvent }) {
 		runInAction(() => {
-			this.games = this.appVM.data;
+			this.games = data;
 			console.log(this.games);
 		});
 	}

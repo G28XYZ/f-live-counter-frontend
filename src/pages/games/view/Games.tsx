@@ -1,14 +1,20 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { ViewProps, ViewType, vm } from '@vm';
 import { GamesVM } from './GamesVM';
 import { IEvent } from '../service/IGames';
+import { useQuery } from '@apollo/client';
+import { EVENTS } from 'client';
 
 export interface GamesProps extends ViewProps<GamesVM> {
 	data?: { [key: string]: IEvent };
 }
 
 const GamesComponent: FC<GamesProps> = ({ viewModel }) => {
-	useEffect(() => {}, [viewModel.appVM.count]);
+	// useQuery(EVENTS, {
+	// 	onCompleted: ({ data }) => {
+	// 		viewModel.setGames(data);
+	// 	},
+	// });
 
 	return (
 		<>

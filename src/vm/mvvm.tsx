@@ -3,6 +3,9 @@ import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import 'reflect-metadata';
 import Container from 'typedi';
+import { GET_FOOTBALL } from 'App';
+import { ApolloClient, useQuery } from '@apollo/client';
+import { client, EVENTS } from 'client';
 
 interface IVM {
 	viewModelName: string;
@@ -17,6 +20,8 @@ export type ViewType<T extends ViewProps<AppViewModel>> = ComponentType<Omit<T, 
 
 export class AppViewModel {
 	@observable parent: any;
+	@observable client: ApolloClient<any>;
+
 	init(): void {
 		this.onInit();
 		makeObservable(this);
@@ -33,13 +38,15 @@ export const vm = ({ viewModelName, Component }: IVM) => {
 		const [init, setInit] = useState(false);
 		const ObserverComponent = useMemo(() => observer(Component), []);
 		const VMInstance = useMemo(() => Container.get(viewModelName) as AppViewModel, []);
+
 		useEffect(() => {
 			if (!init) {
+				VMInstance.client = client;
 				VMInstance.init();
 				setInit(true);
 			}
-		}, [init, VMInstance]);
-		useEffect(() => () => VMInstance.unmount(), [VMInstance]);
+		});
+		useEffect(() => () => VMInstance.unmount(), []);
 		return init ? <ObserverComponent viewModel={VMInstance} {...props} /> : null;
 	};
 };
