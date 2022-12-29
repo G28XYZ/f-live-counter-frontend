@@ -1,6 +1,7 @@
 import { ApolloClient, ApolloLink, concat, gql, HttpLink, InMemoryCache } from '@apollo/client';
+const { API_URL } = process.env;
 
-const uri = 'https://f-live-counter.vercel.app/api';
+const uri = API_URL;
 // const uri = "http://localhost:4000/api";
 const cache = new InMemoryCache();
 const httpLink = new HttpLink({ uri });

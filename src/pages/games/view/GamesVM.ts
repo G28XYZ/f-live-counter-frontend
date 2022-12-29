@@ -12,7 +12,7 @@ export class GamesVM extends AppViewModel {
 		this.client.watchQuery({ query: EVENTS }).subscribe(({ data }) => this.setGames(data.data));
 	}
 
-	@action setGames(data: { [key: string]: IEvent }) {
+	@action.bound setGames(data: { [key: string]: IEvent }) {
 		runInAction(() => {
 			this.games = data;
 			console.log(this.games);
