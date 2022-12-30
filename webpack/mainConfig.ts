@@ -2,8 +2,9 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { TsConfigPathsPlugin } from 'awesome-typescript-loader';
+import TsConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import Dotenv from 'dotenv-webpack';
+
 const devMode = process.env.MODE !== 'production';
 
 export const mainConfig = {
@@ -11,7 +12,7 @@ export const mainConfig = {
 	devtool: devMode ? 'source-map' : 'inline-source-map',
 	resolve: {
 		extensions: ['.ts', '.js', '.json', '.tsx'],
-		plugins: [new TsConfigPathsPlugin() as any],
+		plugins: [new TsConfigPathsPlugin({ extensions: ['.ts', '.js', '.json', '.tsx'] })],
 	},
 	output: {
 		path: path.join(__dirname, '../build'),
@@ -20,11 +21,7 @@ export const mainConfig = {
 	module: {
 		rules: [
 			{
-				test: /\.(ts|tsx)?$/,
-				loader: 'ts-node',
-			},
-			{
-				test: /\.(js|jsx)?$/,
+				test: /\.((ts|js)x|js|ts)?$/,
 				loader: 'babel-loader',
 			},
 			{
@@ -34,14 +31,9 @@ export const mainConfig = {
 		],
 	},
 	plugins: [
-		new HtmlWebpackPlugin({
-			template: './public/index.html',
-		}),
+		new HtmlWebpackPlugin({ template: './public/index.html' }),
 		new CleanWebpackPlugin(),
-		new MiniCssExtractPlugin({
-			filename: '[name].css',
-			chunkFilename: '[id].css',
-		}),
+		new MiniCssExtractPlugin({ filename: '[name].css', chunkFilename: '[id].css' }),
 		new Dotenv(),
 	],
 };
